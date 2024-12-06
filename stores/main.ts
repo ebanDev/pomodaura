@@ -1,5 +1,5 @@
 export const useMainStore = defineStore('main', () => {
-  const auraGradient = ref('linear-gradient(90deg, rgb(255, 0, 195) 0%, rgb(148, 0, 255) 100%)')
+  const auraGradient = ref('linear-gradient(90deg, rgb(255, 0, 195) 33%, rgb(148, 0, 255) 100%)')
   const auraShape = ref('circle')
   const workMinutes = ref(25)
   const breakMinutes = ref(5)
