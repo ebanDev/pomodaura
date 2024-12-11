@@ -6,6 +6,7 @@ export const useMainStore = defineStore('main', () => {
   const addNoise = ref(true)
   const pomodoroPosition = ref({ x: 0, y: 0 })
   const kittyPosition = ref({ x: 0, y: 0 })
+  const kittyOpen = ref(false)
 
   function applySettings(newWorkMinutes: number, newBreakMinutes: number) {
     workMinutes.value = newWorkMinutes
@@ -20,6 +21,7 @@ export const useMainStore = defineStore('main', () => {
     addNoise,
     pomodoroPosition,
     kittyPosition,
+    kittyOpen,
     applySettings
   }
 }, {

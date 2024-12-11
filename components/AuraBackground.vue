@@ -1,5 +1,14 @@
 <template>
-  <canvas ref="canvasRef" class="aura"></canvas>
+  <div>
+    <canvas ref="canvasRef" class="aura"></canvas>
+    <UButton
+      icon="i-ph-download-bold"
+      class="fixed bottom-4 right-4"
+      @click="downloadAura"
+    >
+      Download Aura
+    </UButton>
+  </div>
 </template>
 
 <style scoped>
@@ -59,6 +68,51 @@ async function applyNoise(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasEleme
   ctx.globalCompositeOperation = 'source-over';
 }
 
+function updateFavicon(canvas: HTMLCanvasElement) {
+  // Create a square favicon canvas
+  const size = 32;
+  const faviconCanvas = document.createElement('canvas');
+  faviconCanvas.width = size;
+  faviconCanvas.height = size;
+  const ctx = faviconCanvas.getContext('2d');
+  if (!ctx) return;
+
+  // Calculate square crop dimensions from the main canvas
+  const minDimension = Math.min(canvas.width, canvas.height);
+  const sourceX = (canvas.width - minDimension) / 2;
+  const sourceY = (canvas.height - minDimension) / 2;
+
+  // Draw the cropped and scaled square portion
+  ctx.drawImage(
+    canvas,
+    sourceX, sourceY, minDimension, minDimension, // source
+    0, 0, size, size // destination
+  );
+  
+  const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+  link.type = 'image/x-icon';
+  link.rel = 'shortcut icon';
+  link.href = faviconCanvas.toDataURL();
+  document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+function downloadAura() {
+  const exportCanvas = document.createElement('canvas');
+  exportCanvas.width = 1920;
+  exportCanvas.height = 1080;
+  const ctx = exportCanvas.getContext('2d');
+  if (!ctx || !canvasRef.value) return;
+
+  // Draw the current canvas content scaled to 1920x1080
+  ctx.drawImage(canvasRef.value, 0, 0, 1920, 1080);
+
+  // Create download link
+  const link = document.createElement('a');
+  link.download = 'pomodaura.png';
+  link.href = exportCanvas.toDataURL('image/png');
+  link.click();
+}
+
 async function drawGradient() {
   const canvas = canvasRef.value;
   if (!canvas) return;
@@ -67,8 +121,15 @@ async function drawGradient() {
   if (!ctx) return;
 
   const shapeType = props.shape;
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  // Set canvas size to match window while maintaining aspect ratio
+  const windowRatio = window.innerWidth / window.innerHeight;
+  if (windowRatio > 1) {
+    canvas.width = window.innerHeight * windowRatio;
+    canvas.height = window.innerHeight;
+  } else {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerWidth / windowRatio;
+  }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   const gradientPoints = gradientStringToObject(props.auraGradient);
@@ -111,6 +172,9 @@ async function drawGradient() {
   }
 
   await applyNoise(ctx, canvas);
+  
+  // Add favicon update after drawing is complete
+  updateFavicon(canvas);
 }
 
 function drawCircle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {

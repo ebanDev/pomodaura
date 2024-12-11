@@ -2,11 +2,11 @@
   <AuraBackground :auraGradient="auraGradient" :addNoise="addNoise" :shape="auraShape" />
   <div class="container">
     <div class="settings">
-      <UButton class="w-52" icon="i-ph-timer-bold" @click="pomodoroSettingsOpen = true" v-if="!pomodoroSettingsOpen">
+      <UButton class="w-56" icon="i-ph-timer-bold" @click="pomodoroSettingsOpen = true" v-if="!pomodoroSettingsOpen">
         Open Pomodoro Settings</UButton>
-      <UButton class="w-52" icon="i-ph-palette-bold" @click="auraSettingsOpen = true" v-if="!auraSettingsOpen">Open Aura
+      <UButton class="w-56" icon="i-ph-palette-bold" @click="auraSettingsOpen = true" v-if="!auraSettingsOpen">Open Aura
         Settings</UButton>
-      <UButton class="w-52" icon="i-ph-cat-bold" @click="kittyOpen = true" v-if="!kittyOpen">Open Kitty</UButton>
+      <UButton class="w-56" icon="i-ph-cat-bold" @click="kittyOpen = true" v-if="!kittyOpen">Open Kitty</UButton>
     </div>
 
     <WidgetsPomodoroSettings v-if="pomodoroSettingsOpen" @close="pomodoroSettingsOpen = false" />
@@ -19,17 +19,11 @@
 
 <script setup lang="ts">
 import { useMainStore } from '~/stores/main'
-import { vDraggable } from '@neodrag/vue';
-import { Vue3ColorPicker } from '@cyhnkckali/vue3-color-picker';
-import '@cyhnkckali/vue3-color-picker/dist/style.css'
 
 const store = useMainStore()
-const { addNoise, auraGradient, auraShape, auraSpread, workMinutes, breakMinutes, pomodoroPosition, kittyPosition } = storeToRefs(store)
+const { addNoise, auraGradient, auraShape, workMinutes, breakMinutes, pomodoroPosition, kittyPosition, kittyOpen } = storeToRefs(store)
 const pomodoroSettingsOpen = ref(false)
 const auraSettingsOpen = ref(false)
-const kittyOpen = ref(true)
-const kittyImgEl = ref<HTMLImageElement | null>(null)
-const gradientValue = ref('')
 </script>
 
 <style scoped>

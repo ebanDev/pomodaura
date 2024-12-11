@@ -32,7 +32,7 @@ const isWorking = ref(true)
 const isRunning = ref(false)
 let intervalId: number | null = null
 
-const timerLabel = computed(() => isWorking.value ? 'Working' : 'Break')
+const timerLabel = computed(() => isWorking.value ? 'Work' : 'Break')
 const formattedTime = computed(() => {
   const minutes = Math.floor(timeLeft.value / 60)
   const seconds = timeLeft.value % 60
@@ -79,6 +79,10 @@ function completeCycle() {
   timeLeft.value = isWorking.value ? props.workDuration : props.breakDuration
 }
 
+watch([timeLeft, isWorking], () => {
+  document.title = `${timerLabel.value}: ${formattedTime.value}`;
+});
+
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId)
 })
@@ -86,6 +90,7 @@ onUnmounted(() => {
 onMounted(() => {
   // Reset timer each time (in case of hot reload or nav)
   timeLeft.value = props.workDuration
+  document.title = `${timerLabel.value}: ${formattedTime.value}`;
 })
 </script>
 
