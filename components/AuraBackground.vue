@@ -69,13 +69,29 @@ async function applyNoise(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasEleme
 }
 
 function updateFavicon(canvas: HTMLCanvasElement) {
-  // Create a square favicon canvas
   const size = 32;
+  const cornerRadius = 10;
   const faviconCanvas = document.createElement('canvas');
   faviconCanvas.width = size;
   faviconCanvas.height = size;
   const ctx = faviconCanvas.getContext('2d');
   if (!ctx) return;
+
+  // Create rounded rectangle path
+  ctx.beginPath();
+  ctx.moveTo(cornerRadius, 0);
+  ctx.lineTo(size - cornerRadius, 0);
+  ctx.quadraticCurveTo(size, 0, size, cornerRadius);
+  ctx.lineTo(size, size - cornerRadius);
+  ctx.quadraticCurveTo(size, size, size - cornerRadius, size);
+  ctx.lineTo(cornerRadius, size);
+  ctx.quadraticCurveTo(0, size, 0, size - cornerRadius);
+  ctx.lineTo(0, cornerRadius);
+  ctx.quadraticCurveTo(0, 0, cornerRadius, 0);
+  ctx.closePath();
+  
+  // Create clipping path for rounded corners
+  ctx.clip();
 
   // Calculate square crop dimensions from the main canvas
   const minDimension = Math.min(canvas.width, canvas.height);
@@ -85,8 +101,8 @@ function updateFavicon(canvas: HTMLCanvasElement) {
   // Draw the cropped and scaled square portion
   ctx.drawImage(
     canvas,
-    sourceX, sourceY, minDimension, minDimension, // source
-    0, 0, size, size // destination
+    sourceX, sourceY, minDimension, minDimension,
+    0, 0, size, size
   );
   
   const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
