@@ -1,13 +1,6 @@
 <template>
   <div>
     <canvas ref="canvasRef" class="aura"></canvas>
-    <UButton
-      icon="i-ph-download-bold"
-      class="fixed bottom-4 right-4"
-      @click="downloadAura"
-    >
-      Download Aura
-    </UButton>
   </div>
 </template>
 
@@ -110,23 +103,6 @@ function updateFavicon(canvas: HTMLCanvasElement) {
   link.rel = 'shortcut icon';
   link.href = faviconCanvas.toDataURL();
   document.getElementsByTagName('head')[0].appendChild(link);
-}
-
-function downloadAura() {
-  const exportCanvas = document.createElement('canvas');
-  exportCanvas.width = 1920;
-  exportCanvas.height = 1080;
-  const ctx = exportCanvas.getContext('2d');
-  if (!ctx || !canvasRef.value) return;
-
-  // Draw the current canvas content scaled to 1920x1080
-  ctx.drawImage(canvasRef.value, 0, 0, 1920, 1080);
-
-  // Create download link
-  const link = document.createElement('a');
-  link.download = 'pomodaura.png';
-  link.href = exportCanvas.toDataURL('image/png');
-  link.click();
 }
 
 async function drawGradient() {
@@ -263,4 +239,7 @@ onMounted(() => {
 watch(() => props.auraGradient, drawGradient, { deep: true });
 watch(() => props.addNoise, drawGradient);
 watch(() => props.shape, drawGradient);
+
+// Add expose for external access to canvas
+defineExpose({ canvasRef })
 </script>

@@ -26,9 +26,12 @@
 import { Vue3ColorPicker } from '@cyhnkckali/vue3-color-picker';
 import { storeToRefs } from 'pinia';
 import { useMainStore } from '~/stores/main';
+import '@cyhnkckali/vue3-color-picker/dist/style.css'
 
 const store = useMainStore();
 const { auraGradient, addNoise, auraShape } = storeToRefs(store);
+
+console.log(auraGradient.value);
 
 const auraShapes = ref([
   { label: 'Circle', value: 'circle', icon: 'i-ph-circle-bold' },
@@ -39,12 +42,21 @@ const auraShapes = ref([
 
 <style>
 .ck-cp-menu {
-  display: none;
+  display: none !important;
 }
 
 .ck-cp-container {
-  box-shadow: none;
-  width: 100%;
-  --padding: 0;
+  box-shadow: none !important;
+  width: 100% !important;
+  --padding: 0 !important;
+  background: transparent !important;
+}
+
+.cp-main-btn {
+  background: transparent !important;
+
+  svg {
+    fill: var(--ui-text) !important;
+  }
 }
 </style>
